@@ -1,0 +1,11 @@
+--- # Apply Include in my Playbook
+
+- hosts: appgroup
+  user: ansadm
+  connection: ssh
+  sudo: yes
+  gather_facts: no
+  tasks:
+  - include: ~/plays/play1_telnet.yml
+  - name: Verify the installation 
+    shell: yum list install | grep 'telnet\|lynx'  > /home/ansadm/pkgs2.log

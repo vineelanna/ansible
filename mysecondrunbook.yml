@@ -1,0 +1,21 @@
+--- # This is my second Runbook
+
+- hosts: appgroup:dbgroup
+  user: ansadm
+  connection: ssh
+  sudo: yes
+  gather_facts: no
+  vars_prompt:
+  - name: pkg_name
+    prompt: Enter the name of Package
+    default: httpd
+    private: no
+  tasks:
+  - name: Install {{ pkg_name }}
+    yum: pkg={{ pkg_name }} state=installed
+    
+    run_once: true
+  - name: Install telnet
+    yum: pkg=telnet state=installed
+
+

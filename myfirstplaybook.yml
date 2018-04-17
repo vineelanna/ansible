@@ -1,0 +1,28 @@
+--- # My First Playbook
+
+- hosts: appgroup
+  user: ansadm
+  connection: ssh
+  sudo: yes
+  gather_facts: yes
+  vars_files: 
+   - ~/conf/copyright.yml
+   - ~/conf/webdefaults.yml
+  tasks:
+  - name: To install Apache web server
+    yum: pkg=httpd state=installed update_cache=true
+    when: ansible_os_family == "RedHat"
+    notify: restart_httpd_redhat
+  - name: To install Apache web server in Ubuntu
+    command: apt-get install apache2
+    when: apache_os_family == 'Debian'
+    notify: restart_apache2_ubuntu
+  - name: To install Lynx Package
+    yum: pkg=lynx state=installed update_cache=true
+  - debug: msg="{{ lookup('env', 'HOME') }} is the message available"
+  handlers:
+  - name: restart_httpd_redhat
+    shell: systemctl restart httpd
+  - name: restart_apache2_ubuntu
+    shell: service apache2 restart
+  

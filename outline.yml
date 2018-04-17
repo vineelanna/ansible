@@ -1,0 +1,36 @@
+--- # This is an Outline Template
+
+- hosts: appgroup
+  user: ansadm
+  connection: ssh
+  sudo: yes
+  tasks:
+  - name: Capture a Pre-Task timestamp
+    command: /usr/bin/date
+    register: pre_task
+  - debug: var=pre_task
+  - name: task1 # Install Apache Web Server
+    yum: pkg=httpd state=latest
+    notify: restart_httpd
+  - name: task2 #Verify Web service is running
+    command: systemctl status httpd
+    register: status_httpd
+    ignore_errors: yes
+  - debug: var=status_httpd
+  - name: task3 #Install {{ item }}  Client
+    yum: pkg={{ item }} state=latest
+    with_items:
+    - telnet
+    - lynx
+  - name: task4 # Capture a log of all installed packages on the system
+    command: yum list installed
+    register: inst_pkg
+  - debug: var=inst_pkg
+  - name: Capture a post-task timestamp
+    command: /usr/bin/date
+    register: post_task
+  - debug: var=post_task
+  handlers:
+  - name: restart_httpd
+    service: name=httpd state=restarted
+

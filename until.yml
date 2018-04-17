@@ -1,0 +1,20 @@
+--- # Implimenting Until
+
+- hosts: appgroup
+  user: ansadm
+  sudo: yes
+  connection: ssh
+  gather_facts: no
+  tasks:
+  - name: Install Windows 7
+    yum: pkg=windows7 state=installed
+    ignore_errors: yes
+  - name: Install Httpd in server
+    yum: pkg=httpd state=present update_cache=true
+  - name: Verfiy httpd status
+    shell: systemctl status httpd
+    register: httpd_status
+    until: httpd_status.stdout.find("active (running)") != -1
+    retries: 5
+    delay: 5
+  - debug: var=httpd_status  

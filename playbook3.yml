@@ -1,0 +1,13 @@
+--- # Playbook 3
+
+- hosts: appgroup
+  user: ansadm
+  sudo: yes
+  connection: ssh
+  gather_facts: no
+  tasks:
+  - include: ~/plays/play1_telnet.yml
+    tags: packages
+  - name: Verify Telent is installed
+    raw: yum list installed | grep telnet > /home/ansadm/pkgs.log
+    tags: logging

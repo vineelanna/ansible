@@ -1,0 +1,23 @@
+--- # Exercise File 1
+
+- hosts: appserver
+  user: ansadm
+  connection: ssh
+  sudo: yes
+  gather_facts: no
+  tasks:
+  - name: Install Lynx Package
+    yum: pkg=lynx state=installed update_cache=true
+  - name: Install telnet package
+    yum: pkg=telnet state=present update_cache=true
+
+- hosts: dbserver
+  user: ansadm
+  sudo: yes
+  connection: ssh
+  gather_facts: no
+  tasks:
+  - name: Install Telnet Package
+    yum: pkg=telnet state=installed update_cache=yes
+  - name: Install Lynx Package
+    yum: pkg=lynx state=present update_cache=true
